@@ -1,0 +1,65 @@
+
+{% include "app/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Update ToDo</title>
+        <style>
+        body {
+            background-color: lavender;
+        }
+        .vertical-line {
+            border-right: 1px solid grey;
+        }
+        .card {
+            margin: 50px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+        <div class="container-fluid">
+    <div class="row">
+        <!-- Left side -->
+        <div class="col-md-6 vertical-line">
+        <div class="card">
+                <h3>Update Todo</h3>
+                <form method="post" >
+                {% csrf_token %}
+                <div class="mb-3">
+                        <label for="headline" class="form-label">Headline</label>
+                        <input type="text" class="form-control" id="headline" name="headline" placeholder="Enter Headline" required>
+                </div>
+                <div class="mb-3">
+                        <label for="text" class="form-label">Text</label>
+                        <textarea class="form-control" id="text" name="text" rows="4" placeholder="Enter Description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Update</button>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'home' %}" class="btn btn-primary">Home</a><br>
+                </form>
+        </div>
+        </div>
+
+
+        <!-- Right side -->
+        <div class="col-md-6">
+                <div class="card">
+                    <h3>{{ todo.headline }}</h3>
+                    <p><strong>Text:</strong> {{ todo.text }}</p>
+                    <p><strong>Created Time:</strong> {{ todo.created_at }}</p>
+                    <p><strong>Updated Time:</strong> {{ todo.updated_at }}</p>
+                    {% if todo.status %}
+                    <p><strong>Status:</strong> Completed </p>
+                    {% else %}
+                    <p><strong>Status:</strong> In Progress </p>
+                    {% endif %}
+                </div>
+        </div>
+    </div>
+</div>
+        
+</body>
+</html>

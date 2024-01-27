@@ -1,0 +1,73 @@
+{% include "app/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Home</title>
+    <style>
+        body {
+            background-color: lavender;
+        }
+        .vertical-line {
+            border-right: 1px solid grey;
+        }
+        .card {
+            margin: 50px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left side -->
+        <div class="col-md-6 vertical-line">
+        <div class="card">
+                <h3>Create Todo</h3>
+                <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                        <label for="headline" class="form-label">Headline</label>
+                        <input type="text" class="form-control" id="headline" name="headline" placeholder="Enter Headline" required>
+                </div>
+                <div class="mb-3">
+                        <label for="text" class="form-label">Text</label>
+                        <textarea class="form-control" id="text" name="text" rows="4" placeholder="Enter Description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+        </div>
+        </div>
+
+
+        <!-- Right side -->
+        <div class="col-md-6">
+            {% for todo in todos %}
+                <div class="card">
+                    <h3>{{ todo.headline }}</h3>
+                    <p><strong>Text:</strong> {{ todo.text }}</p>
+                    <p><strong>Created Time:</strong> {{ todo.created_at }}</p>
+                    <p><strong>Updated Time:</strong> {{ todo.updated_at }}</p>
+                    {% if todo.status %}
+                    <p><strong>Status:</strong> Completed </p>
+                    <a href="{% url 'change_todo_status' todo.id 'undone' %}" class="btn btn-warning">Mark As UnDone</a><br>
+                    {% else %}
+                    <p><strong>Status:</strong> In Progress </p>
+                    <a href="{% url 'change_todo_status' todo.id 'done' %}" class="btn btn-warning">Mark As Done</a><br>
+                    {% endif %}
+                    <a href="{% url 'update_todo' todo.id %}" class="btn btn-warning">Update</a><br>
+                    <a href="{% url 'delete_todo' todo.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
