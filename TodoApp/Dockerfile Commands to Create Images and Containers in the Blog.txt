@@ -1,0 +1,39 @@
+
+
+
+1. Step 01: CREATE Network: 
+
+# Create a custom bridge network. To learn more on Docker Networks, checkout my blog on Docker Networks
+docker network create blog-network
+
+
+2. Step 02: BUILD Image: 
+
+# As we are not using docker-compose, we need three Dockerfile to create Django, Nginx and MySQL containers. 
+
+# Run the command to build the MySQL image
+docker build -t my-mysql-image -f Dockerfile-mysql .
+
+# Run the command to build the django image
+docker build -t my-django-image -f Dockerfile-django .
+
+
+# Run the command to build the nginx image
+docker build -t my-nginx-image -f Dockerfile-nginx .
+
+
+
+3. Step 03: RUN Container: 
+
+# Command to create Django container
+docker run -d -p 8000:8000 --name my-django-container --network blog-network my-django-image
+
+# Command to create the nginx container
+docker run -d -p 81:80 --name my-nginx-container --network blog-network my-nginx-image
+
+# Command to run the mysql container 
+docker run -d -p 3306:3306 --name my-mysql-container --network blog-network -e MYSQL_ROOT_PASSWORD=myrootpassword -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword my-mysql-image
+
+# If the django container is unable to connect with the mysql container, first delete the existing mysql container, and run the bellow command to create 
+# a mysql container. We are allowing any connection to connect with the mysql container. As we are learing, this is okey, but not for production.  
+docker run -d -p 3306:3306 --name my-mysql-container --network blog-network -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=myrootpassword -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword my-mysql-image
